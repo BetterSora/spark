@@ -1,0 +1,38 @@
+1.利用Python产生日志，并用crontab定时执行 
+	crontab -e
+		*/1 * * * * /home/qinzhen/log_generator.sh
+2.对接Python日志产生器输出的日志到Flume
+3.日志=>Flume=>Kafka
+4.数据清洗 case class(ip, time, courseId, statusCode, referer)
+5.统计今天到现在为止实战课程的访问量
+	yyyyMMdd courseId
+	使用数据库来存储我们的统计结果
+		Spark Streaming吧统计结果写入到数据库里面
+		关系型数据库(RDBMS)的做法：
+			day			courseId 		clickCount
+			20171111	1				10
+			20171111	2				10
+		下一个批次的数据进来以后：
+			20171111 + 1 ==> clickCount + 下一个批次的统计结果 ==> 写入到数据库中
+		
+		Hbase:一个API搞定，非常方便，这就是选择Hbase的原因所在
+		Hbase表设计
+			创建表
+				create 'course_clickcount' , 'info'
+			RowKey设计
+				20171111 + 1
+		注意：利用Scala调用以前写的java工具类库(单例模式封装)
+		
+		可视化前端根据：yyyyMMdd courseId吧数据库里面的统计结果展示出来
+6.统计今天到现在为止从搜索引擎引流过来的实战课程的访问量
+	HBase表设计
+		创建表
+			create 'course_search_clickcount', 'info'
+		RowKey设计
+			20171111 + www.baidu.com + 1
+7.提交任务到集群运行
+pom文件的两句话要注释掉才能打包
+spark-submit --master local[2] \
+--jars $(echo ~/apps/hbase-1.2.0-cdh5.7.0/lib/*.jar | tr ' ' ',') ~/apps/mysql-connector-java-5.1.27-bin.jar\
+--class cn.njupt.streamingProj.spark.StatStreamingApp \
+spark-1.0.jar \

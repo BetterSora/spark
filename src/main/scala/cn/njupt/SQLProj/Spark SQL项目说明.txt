@@ -1,0 +1,78 @@
+目标：统计视频和手记的TOPN
+
+1.对数据进行清洗，格式为：访问时间，访问URL，访问过程耗费流量，访问IP地址。然后将清洗后数据保存为txt输出
+	2016-11-10 00:01:02	http://www.imooc.com/code/2053	331	211.162.33.31
+	
+	注意点：SimpleDateFormat线程不安全
+2.根据需要统计的信息对数据再次进行清洗，同时将RDD转为DF，格式为：URL，cmsType，cmsId，流量，ip，province，时间，day。然后以day进行分区保存为parquet格式
+	|http://www.imooc.com/code/2053|code   |2053 |1482   |211.162.33.31  |福建省     |2016-11-10 00:01:02|20161110|
+	
+	注意点：使用github上开源项目来解析IP 
+				1）git clone https://github.com/wzhe06/ipdatabase.git
+				2）编译下载的项目：mvn clean package -DskipTests
+				3）安装jar包到自己的maven仓库
+					mvn install:install-file -Dfile=C:\Users\qinzhen\Desktop\ipdatabase-master\target\ipdatabase-1.0-SNAPSHOT.jar 
+					-DgroupId=com.ggstar -DartifactId=ipdatabase -Dversion=1.0 -Dpackaging=jar
+			利用正则表达式将无效URL过滤掉	"http://www.imooc.com/(code|article)/\\d+"
+3.统计最受欢迎的TopN课程
+	注意点：关闭schema类型的自动推断，如果不关闭则day会被解析成Integer类型
+				config("spark.sql.sources.partitionColumnTypeInference.enabled","false")
+			accessDF要缓存起来
+			写入Mysql的两种方式，在第一种方式中要写一个函数来删除表中数据，第二种方式则设置mode为overwrite就行	
+			将数据写入到MySQL中时，不要一条条插入，先将一个分区中的数据用ArrayBuffer缓存起来 foreachPartition
+			注意使用try catch 
+			向MySQL提交数据时要注意设置手动提交和批量提交
+			Window函数在Spark SQL的使用(按照省市进行统计TopN课程)
+4.按照省市进行统计TopN课程
+    注意点：用到了窗口函数，组内排序
+5.按照流量进行统计的TopN课程			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+create table day_video_access_topn_stat (
+day varchar(8) not null,
+cms_id bigint(10) not null,
+times bigint(10) not null,
+primary key (day, cms_id)
+);
+
+
+create table day_video_province_access_topn_stat (
+day varchar(8) not null,
+cms_id bigint(10) not null,
+province varchar(20) not null,
+times bigint(10) not null,
+times_rank int not null,
+primary key (day, cms_id, province)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+create table day_video_traffics_topn_stat (
+day varchar(8) not null,
+cms_id bigint(10) not null,
+traffics bigint(20) not null,
+primary key (day, cms_id)
+);			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
