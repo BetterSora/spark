@@ -197,3 +197,31 @@ object myClass {
     println(a.compute())
   }
 }
+
+object Name {
+  /*def unapply(name: String): Option[(String, String)] = {
+    val fields = name.split(" ")
+    if (fields.length != 2)
+      None
+    else
+      Some(fields(0), fields(1))
+  }*/
+
+  def unapplySeq(input: String): Option[Seq[String]] = {
+    if (input.trim == "") None else Some(input.trim.split("\\s+"))
+  }
+}
+
+object TestName {
+  def main(args: Array[String]): Unit = {
+    val people = StdIn.readLine()
+    /*val Name(first, last) = people
+    println(first + "-----" + last)*/
+
+    people match {
+      case Name(first, last) => println(first + "-----" + last)
+      case Name(first, middle, last) => println(first + "-----" + middle + "-----" + last)
+      case Name(first, "van", "der", last) => println(first + "-----" + "van" + "----" + "der" + "-----" + last)
+    }
+  }
+}
