@@ -26,7 +26,7 @@ class Test {
   def meet(p: {def greeting: String}): Unit = {
     println("meet调用成功 " + p.greeting)
 
-    if (3 > 2) break()
+    if (3 > 4) break()
   }
 }
 
@@ -52,6 +52,10 @@ object Test {
     //println(args.head)
     println(args)
   }
+
+  // 如果有return就没有自动推断功能了，要手动加上返回值类型
+  def funcc1():Int = return 3
+  def funcc2() = 3
 
   def main(args: Array[String]): Unit = {
     new Test().fun2(new Test())
@@ -105,7 +109,27 @@ object Test {
         "hello"
       }
     })
-    println(StdIn.readInt())
+    //println(StdIn.readInt())
+
+    // 简写方式只在参数类型已知的情况下有效
+    // 当你将一个匿名函数传递给另一个函数或方法时，Scala会尽可能帮你推断出类型信息
+    // 如果参数只在=>右侧出现一次，你可以用_替换掉它
+    val fun1 = 3 * (_: Double)
+    val fun2 = (x: Double) => 3 * x
+    val fun3: Double => Double = 3 * _
+
+    var x = 10
+    def myUntil(condition: Boolean)(block: => Unit): Unit = {
+      if (!condition) {
+        block
+        myUntil(x == 0)(block)
+      }
+    }
+
+    myUntil(x == 0) {
+      x -= 1
+      println(x)
+    }
   }
 }
 
