@@ -208,6 +208,7 @@ object Name {
   }*/
 
   def unapplySeq(input: String): Option[Seq[String]] = {
+    // 隐式转换将Array转成WrappedArray，WrappedArray继承了AbstractSeq
     if (input.trim == "") None else Some(input.trim.split("\\s+"))
   }
 }
