@@ -53,9 +53,30 @@ object Test {
     println(args)
   }
 
+  // 产生一个Stream
+  def numsFrom(n: Int): Stream[Int] = n #:: numsFrom(n + 1)
+
   // 如果有return就没有自动推断功能了，要手动加上返回值类型
   def funcc1():Int = return 3
   def funcc2() = 3
+
+  // Manifest上下文界定
+  def makePair[T : Manifest](first: T, second: T): Unit = {
+    Array[T](first, second)
+    /*val r = new Array[T](2)
+    r(0) = first
+    r(1) = second*/
+  }
+
+  // 类型推断：输入List(1,2,3)时无法推断出A为Int
+  def firstLast[A, B <: Iterable[A]](it: B): (A, A) = {
+    (it.head, it.last)
+  }
+
+  // 可以推断
+  def firstLastNew[A, B](it: B)(implicit ev: B <:< Iterable[A]): (A, A) = {
+    (it.head, it.last)
+  }
 
   def main(args: Array[String]): Unit = {
     new Test().fun2(new Test())
@@ -130,6 +151,21 @@ object Test {
       x -= 1
       println(x)
     }
+
+    println(numsFrom(10).take(5).force)
+    println(numsFrom(10)(5))
+
+    // 懒视图
+    (0 to 100).view.map(math.pow(10, _)).map(1 / _).force
+
+    // 并行集合
+    for (i <- (0 until 100).par) println(i + " ")
+
+    // 偏函数
+    val f: PartialFunction[String, Int] = { case "+" => 1; case "-" => -1; case "*" => 0}
+
+    makePair(new Test, new Test)
+    makePair(1, 2)
   }
 }
 
@@ -248,5 +284,36 @@ object TestName {
       case Name(first, middle, last) => println(first + "-----" + middle + "-----" + last)
       case Name(first, "van", "der", last) => println(first + "-----" + "van" + "----" + "der" + "-----" + last)
     }
+  }
+}
+
+// 匹配嵌套结构
+abstract class Item
+case class Article(description: String, price: Double) extends Item
+case class Bundle(description: String, discount: Double, items: Item*)
+object TestItem {
+  def main(args: Array[String]): Unit = {
+    val temp = Bundle("Father's day special", 20.0,
+      Article("Scala", 39.95),
+      Article("Java", 45.88),
+      Article("Python", 32.98))
+
+    temp match {
+      case Bundle(_, _, Article(desc, _), _*) => println(desc)
+      case Bundle(_, _, art @ Article(_, _), rest @ _*) => println(art, rest)
+    }
+  }
+}
+
+// this返回的是对象,this.type返回的是类型
+object Title
+class Document {
+  def set(obj: Title.type): this.type = this
+  def to(arg: String): Unit = println(arg)
+}
+object TestDocument {
+  def main(args: Array[String]): Unit = {
+    val book = new Document
+    book set Title to "Scala for the Impatient"
   }
 }
