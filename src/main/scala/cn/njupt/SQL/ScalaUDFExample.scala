@@ -9,7 +9,7 @@ import org.apache.spark.sql.SparkSession
 object ScalaUDFExample {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("Scala UDF Example").setMaster("local[2]")
-    val spark = SparkSession.builder().config(conf).getOrCreate()
+    val spark = SparkSession.builder().enableHiveSupport().config(conf).getOrCreate()
 
     val df = spark.read.json("./src/main/resources/temperatures.json")
     df.createOrReplaceTempView("citytemps")

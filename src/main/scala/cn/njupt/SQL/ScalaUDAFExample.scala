@@ -63,7 +63,7 @@ object ScalaUDAFExample {
 
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("Scala UDAF Example").setMaster("local[2]")
-    val spark = SparkSession.builder().config(conf).getOrCreate()
+    val spark = SparkSession.builder().enableHiveSupport().config(conf).getOrCreate()
 
     val df = spark.read.json("./src/main/resources/inventory.json")
     df.createOrReplaceTempView("inventory")
