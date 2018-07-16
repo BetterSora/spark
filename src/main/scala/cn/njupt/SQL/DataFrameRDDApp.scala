@@ -11,7 +11,12 @@ object DataFrameRDDApp {
     val spark = SparkSession.builder().appName("DataFrameRDDApp").master("local[2]").getOrCreate()
 
     //inferReflection(spark)
-    program(spark)
+    //program(spark)
+    // 第三种方式，最简单！
+    import spark.implicits._
+    val rdd = spark.sparkContext.textFile("./src/main/resources/infos.txt")
+    val df = rdd.map(_.split(",")).map(fields => (fields(0).toInt, fields(1), fields(2).toInt)).toDF("id", "name", "age")
+    df.show()
   }
 
   def program(spark: SparkSession): Unit = {

@@ -14,7 +14,7 @@ object HiveMySQLApp {
     // 加载Hive表数据
     val hiveDF = spark.table("emp")
 
-    // 加载MySQL表数据
+    // 加载MySQL表数据，虽然这里不会真正的读数据，但是这里会连接数据库获取schema信息，所以这里连接要是通的
     val mysqlDF = spark.read.format("jdbc").option("url", "jdbc:mysql://localhost:3306")
       .option("dbtable", "spark.DEPT").option("user", "root")
       .option("password", "root").option("driver", "com.mysql.jdbc.Driver").load()
@@ -22,7 +22,6 @@ object HiveMySQLApp {
     // Inner JOIN   后面是join的条件
     val resultDF = hiveDF.join(mysqlDF, hiveDF.col("deptno") === mysqlDF.col("DEPTNO"))
     resultDF.show
-
 
     resultDF.select(hiveDF.col("empno"),hiveDF.col("ename"),
       mysqlDF.col("deptno"), mysqlDF.col("dname")).show
