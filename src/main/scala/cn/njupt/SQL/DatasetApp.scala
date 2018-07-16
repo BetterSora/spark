@@ -1,6 +1,6 @@
 package cn.njupt.SQL
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Dataset, SparkSession}
 
 /**
   * Dataset操作
@@ -19,7 +19,7 @@ object DatasetApp {
     val df = spark.read.option("header", "true").option("inferSchema", "true").csv(path)
     df.show
 
-    val ds = df.as[Sales] // 隐式转换就是为了这里
+    val ds: Dataset[Sales] = df.as[Sales]// 隐式转换就是为了这里
     ds.map(line => line.itemId).show
 
     spark.stop()
