@@ -28,7 +28,7 @@ object KafkaReceiverWordCount {
     val messages = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)
 
     // TODO... 自己去测试为什么要取第二个
-    //messages.print() // (null,spark)
+    //messages.print() // (null,spark) key是写入的key，value是写入的实际内容
     messages.map(_._2).flatMap(_.split(" ")).map((_, 1)).reduceByKey(_ + _).print()
 
     ssc.start()
