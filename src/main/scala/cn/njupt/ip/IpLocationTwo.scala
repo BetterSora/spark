@@ -62,10 +62,6 @@ object IpLocationTwo {
     // 将结果写入数据库
     reduced.foreachPartition(it => MyUtils.data2MySQL(it))
 
-
     sc.stop()
-
-
-
   }
 }

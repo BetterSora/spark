@@ -21,10 +21,10 @@ object MyUtils {
     val lines: Iterator[String] = bf.getLines()
     // 对ip规则进行整理，并放入到内存
     val rules: Array[(Long, Long, String)] = lines.map(line => {
-      val fileds = line.split("[|]")
-      val startNum = fileds(2).toLong
-      val endNum = fileds(3).toLong
-      val province = fileds(6)
+      val files = line.split("[|]")
+      val startNum = files(2).toLong
+      val endNum = files(3).toLong
+      val province = files(6)
       (startNum, endNum, province)
     }).toArray
     rules
