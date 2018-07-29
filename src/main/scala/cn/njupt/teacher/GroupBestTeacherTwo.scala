@@ -9,7 +9,7 @@ import org.apache.spark.rdd.RDD
   */
 object GroupBestTeacherTwo {
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName("BestTeacher").setMaster("local[2]")
+    val conf = new SparkConf().setAppName("GroupBestTeacherTwo").setMaster("local[2]")
     val sc = new SparkContext(conf)
 
     val lines: RDD[String] = sc.textFile("F:/java-proj/ideaProj/Spark/src/main/resources/teacher.log", 3)
