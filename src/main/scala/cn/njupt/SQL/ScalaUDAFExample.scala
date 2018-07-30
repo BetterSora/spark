@@ -66,6 +66,8 @@ object ScalaUDAFExample {
     val spark = SparkSession.builder().enableHiveSupport().config(conf).getOrCreate()
 
     val df = spark.read.json("./src/main/resources/inventory.json")
+    df.show()
+    //assert(false)
     df.createOrReplaceTempView("inventory")
     spark.udf.register("SUMPRODUCT", new SumProductAggregateFunction)
 

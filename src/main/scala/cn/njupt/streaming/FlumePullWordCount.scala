@@ -10,6 +10,11 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 /**
   * Spark Streaming整合Flume的第二种方式(pull)
+  *  agent.sinks = spark
+  *  agent.sinks.spark.type = org.apache.spark.streaming.flume.sink.SparkSink
+  *  agent.sinks.spark.hostname = <hostname of the local machine>
+  *  agent.sinks.spark.port = <port to listen on for connection from Spark>
+  *  agent.sinks.spark.channel = memoryChannel
   */
 object FlumePullWordCount {
   Logger.getLogger("org.apache.spark").setLevel(Level.WARN)

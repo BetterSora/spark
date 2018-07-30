@@ -20,7 +20,7 @@ object JdbcRDDDemo {
     val jdbcRDD : JdbcRDD[(Int, String)] = new JdbcRDD(
       sc,
       connection,
-      "SELECT * FROM ta where id >= ? AND id <= ?",
+      "SELECT * FROM ta where id >= ? AND id <= ?", // 这里注意要使用闭区间
       1, 4, 2,
       r => {
         val id = r.getInt(1)

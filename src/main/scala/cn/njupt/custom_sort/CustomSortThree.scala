@@ -29,7 +29,11 @@ object CustomSortThree {
   }
 }
 
-case class User3(age: Int, fv: Int) extends Ordered[User3] with Serializable {
+/**
+  * 这里不需要实现序列化(case class本身实现了序列化)
+  * 但是这么做写死了规则，以后我想要千变万化的规则就很麻烦
+  */
+case class User3(age: Int, fv: Int) extends Ordered[User3] /*with Serializable*/ {
   override def compare(that: User3): Int = {
     if (this.fv == that.fv) {
       this.age - that.age

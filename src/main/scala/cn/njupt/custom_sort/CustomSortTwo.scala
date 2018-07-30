@@ -2,6 +2,10 @@ package cn.njupt.custom_sort
 
 import org.apache.spark.{SparkConf, SparkContext}
 
+/**
+  * 自定义排序
+  * 不改变原始数据的格式
+  */
 object CustomSortTwo {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("CustomSortTwo").setMaster("local[2]")
@@ -29,6 +33,11 @@ object CustomSortTwo {
   }
 }
 
+/**
+  * 实现序列化的原因
+  * 规则也要和数据一起shuffle出去，它和数据是一一对应的，规则就是这个对象
+  * 虽然他在每个task中被new出来，但是后面要跟着数据一起走网络shuffle到其他分区中
+  */
 class User2(val age: Int, val fv: Int) extends Ordered[User2] with Serializable {
   override def compare(that: User2): Int = {
     if (this.fv == that.fv) {

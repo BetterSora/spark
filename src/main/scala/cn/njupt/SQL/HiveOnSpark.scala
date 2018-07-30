@@ -17,6 +17,13 @@ object HiveOnSpark {
       .enableHiveSupport() // 启用spark对hive的支持(可以兼容hive的语法了)
       .getOrCreate()
 
+    // 读取Hive元数据库中的表
+    val dimDF: DataFrame = spark.table("app.etl_user_active_day")
+    dimDF.printSchema()
+    dimDF.show(10 ,false)
+    //spark.sql("select * from app.etl_user_active_day limit 10").show()
+    assert(false)
+
     // 想要使用hive的元数据库，必须指定hive元数据的位置，添加一个hive-site.xml到当前程序的classpath下即可
     import spark.implicits._
     val rdd: RDD[String] = spark.sparkContext.parallelize(List("zhangsan,18","lisi,20","laoduan,18"))

@@ -20,6 +20,7 @@ object CustomSortFour {
       (name, age, fv)
     })
 
+    // 定义排序规则，这么做的好处是没有将规则写死，以后想要什么规则酒倒入什么规则
     implicit val orderedUser: Ordering[User4] = new Ordering[User4] {
       override def compare(x: User4, y: User4): Int = {
         if (x.fv == y.fv) {

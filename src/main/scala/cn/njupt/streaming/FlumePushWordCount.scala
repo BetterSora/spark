@@ -8,6 +8,11 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 /**
   * Spark Streaming整合Flume的第一种方式(push)
+  * agent.sinks = avroSink
+  * agent.sinks.avroSink.type = avro
+  * agent.sinks.avroSink.channel = memoryChannel
+  * agent.sinks.avroSink.hostname = <chosen machine's hostname>
+  * agent.sinks.avroSink.port = <chosen port on the machine>
   */
 object FlumePushWordCount {
   Logger.getLogger("org.apache.spark").setLevel(Level.WARN)

@@ -5,6 +5,7 @@ import org.apache.spark.sql.SparkSession
 
 /**
   * UDF对表中的单行进行转换，以便为每行生成单个对应的输出值
+  * 另一种方式:cn.njupt.ip.IpLocationSQLThree
   */
 object ScalaUDFExample {
   def main(args: Array[String]): Unit = {

@@ -2,6 +2,7 @@ package cn.njupt.streaming
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
@@ -25,7 +26,7 @@ object KafkaReceiverWordCount {
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
 
     // Spark Streaming对接Kafka，一直接收数据，每5秒产生一个批次
-    val messages = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)
+    val messages = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap, StorageLevel.MEMORY_ONLY)
 
     // TODO... 自己去测试为什么要取第二个
     //messages.print() // (null,spark) key是写入到哪个分区，默认是null采用轮询的方式写入，value是写入的实际内容

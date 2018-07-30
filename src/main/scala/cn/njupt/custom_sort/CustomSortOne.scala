@@ -4,6 +4,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * 自定义排序
+  * 自定义一个用户类并继承Ordered，实现比较方式
   */
 object CustomSortOne {
   def main(args: Array[String]): Unit = {
@@ -20,6 +21,7 @@ object CustomSortOne {
       val age = fields(1).toInt
       val fv = fields(2).toInt
 
+      // 这是在driver端实例化的
       new User1(name, age, fv)
     })
 

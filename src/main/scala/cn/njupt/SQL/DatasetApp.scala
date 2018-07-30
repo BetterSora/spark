@@ -4,6 +4,7 @@ import org.apache.spark.sql.{Dataset, SparkSession}
 
 /**
   * Dataset操作
+  * 将DataFrame转成Dataset
   */
 object DatasetApp {
 
