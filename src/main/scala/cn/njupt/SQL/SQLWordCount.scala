@@ -17,6 +17,8 @@ object SQLWordCount {
     // 导入隐式转换
     import spark.implicits._
     val words: Dataset[String] = lines.flatMap(_.split(" "))
+    //words.show()
+    //words.map((_, 1)).toDF("word", "count").show()
     // 注册视图
     words.createTempView("t_word")
 
